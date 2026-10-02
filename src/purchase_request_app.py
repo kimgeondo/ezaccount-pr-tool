@@ -106,7 +106,9 @@ def read_master_file(file_obj) -> List[Dict[str, Any]]:
         wb = load_workbook(xls_bytes, read_only=True, data_only=True)
         ws = wb.active
         rows = []
-        headers = []
+        headers: List[str] = []
+        if ws is None:
+            raise ValueError("Worksheet is None")
         for row in ws.iter_rows(values_only=True):
             if not headers:
                 headers = [str(v).strip() if v is not None else "" for v in row]
@@ -468,7 +470,7 @@ def fetch_live_ezaccount_master_data() -> Dict[str, List[Dict[str, str]]]:
                     continue
             browser.close()
             if not any(collected.values()):
-                raise RuntimeError(f"PR form opened but no master choices were found (title={page_title if 'page_title' in locals() else ''})")
+                raise RuntimeError("PR form opened but no master choices were found")
             return collected
     except Exception:
         logging.exception("Unable to crawl EZAccount master choices")
@@ -717,10 +719,10 @@ def suggest_batches(items: List[Dict[str, Any]], cap: float = 10000.0) -> List[D
     groups: Dict[str, Dict[str, Any]] = {}
     for item in items:
         group_key = str(item.get("quote_group") or item.get("quoteGroup") or "ungrouped").strip() or "ungrouped"
-        item_total = float(item.get("total_price") or item.get("totalPrice") or 0.0)
+        item_tot = item_total(item)
         groups.setdefault(group_key, {"key": group_key, "items": [], "total": 0.0})
         groups[group_key]["items"].append(item)
-        groups[group_key]["total"] += item_total
+        groups[group_key]["total"] += item_tot
 
     sorted_groups = sorted(groups.values(), key=lambda g: g["total"], reverse=True)
     batches: List[Dict[str, Any]] = []
@@ -742,7 +744,10 @@ def item_total(item: Dict[str, Any]) -> float:
     try:
         qty = float(item.get("quantity") or 0)
         unit_price = float(item.get("unit_price") or item.get("unitPrice") or 0)
-        return qty * unit_price
+        total = qty * unit_price
+        if total == 0.0:
+            return float(item.get("total_price") or item.get("totalPrice") or 0.0)
+        return total
     except Exception:
         return float(item.get("total_price") or item.get("totalPrice") or 0.0)
 
@@ -961,7 +966,11 @@ def run_ezaccount_automation(request_id: int) -> Dict[str, Any]:
             except Exception:
                 logging.warning("SAP block layer did not clear within timeout; continuing")
 
-        page.on("dialog", lambda dialog: (dialog.dismiss(), logging.info("Dismissed browser dialog: %s", dialog.message)))
+        def handle_dialog(dialog: Any) -> None:
+            dialog.dismiss()
+            logging.info("Dismissed browser dialog: %s", dialog.message)
+
+        page.on("dialog", handle_dialog)
 
         logging.info("Opening EZAccount login page")
         page.goto(login_url, wait_until="domcontentloaded", timeout=60000)
