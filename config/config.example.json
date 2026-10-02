@@ -1,0 +1,27 @@
+{
+  "base_url": "https://ezaccount.wamc.co.kr",
+  "list_endpoint": "/sap/opu/odata/sap/ZPR_LIST_SRV/PRSet",
+  "detail_endpoint": "/sap/opu/odata/sap/ZPR_LIST_SRV/PRItemSet",
+  "detail_filter_field": "PRNo",
+  "date_filter_field": "DocumentDate",
+  "odata_version": "v2",
+  "list_params": {
+    "$format": "json",
+    "$top": 1000
+  },
+  "state_file": "state/state.json",
+  "output_file": "output/pr_items.xlsx",
+  "output_filename_format": "MT_PRS_PR_LIST_{MM}_{DD}_{YYYY}.xlsx",
+  "output_filename_glob": "MT_PRS_PR_LIST_*.xlsx",
+  "shared_output_dir": "",
+  "shared_output_filename": "MT_PRS_PR_LIST_SHARED.xlsx",
+  "rejected_output_filename_format": "MT_PRS_PR_REJECTED_{MM}_{DD}_{YYYY}.xlsx",
+  "rejected_output_filename_glob": "MT_PRS_PR_REJECTED_*.xlsx",
+  "template_file": "templates/template.xlsx",
+  "username_env": "EZACCOUNT_USERNAME",
+  "password_env": "EZACCOUNT_PASSWORD",
+  "requester_ids": ["A260126", "A200825"],
+  "reqdp_filter": "0000000016",
+  "use_playwright_login": false,
+  "login_url": "https://ezaccount.wamc.co.kr/sap/bc/ui5_ui5/sap/zeasy_account/index.html?sap-client=100#/Login"
+}

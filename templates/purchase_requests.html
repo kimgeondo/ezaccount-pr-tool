@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AJIN USA Purchase Request Builder</title>
+    <style>
+      :root {
+        --primary: #3b5bdb;
+        --primary-soft: #edf1ff;
+        --bg: #f3f6fb;
+        --card: #ffffff;
+        --line: #e5ebf5;
+        --text: #1d2433;
+        --muted: #627089;
+        --danger: #d94c61;
+        --danger-soft: #fff0f3;
+        --green: #1a8f60;
+        --shadow: 0 12px 30px rgba(24, 35, 64, 0.08);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(180deg, #f4f7fe 0%, #eef3fa 100%);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: 24px auto;
+        padding: 0 16px 40px;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #eef2ff 0%, #e0e8ff 100%);
+        color: var(--primary);
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-weight: 800;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) 320px;
+        gap: 22px;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+      h1, h2, h3 {
+        margin-top: 0;
+      }
+      h1 {
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        margin-bottom: 18px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .field label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      input, select, textarea, button {
+        font: inherit;
+      }
+      input, select, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: white;
+        color: var(--text);
+      }
+      input:focus, select:focus, textarea:focus {
+        outline: 2px solid rgba(59, 91, 219, 0.12);
+        border-color: rgba(59, 91, 219, 0.5);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 82px;
+      }
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 11px 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.12s ease, filter 0.12s ease;
+      }
+      button:hover {
+        filter: brightness(0.98);
+        transform: translateY(-1px);
+      }
+      .primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #4a67eb 100%);
+        color: white;
+      }
+      .secondary {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .danger {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 18px 0;
+      }
+      .master-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .item-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .quote-workspace {
+        margin-top: 16px;
+      }
+      .quote-tabs {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--line);
+      }
+      .quote-tab {
+        flex: 0 0 auto;
+        border-radius: 6px 6px 0 0;
+        background: transparent;
+        color: var(--muted);
+      }
+      .quote-tab[aria-selected="true"] {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .quote-panel {
+        padding-top: 16px;
+      }
+      .quote-panel[hidden] {
+        display: none;
+      }
+      .quote-settings {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.7fr) minmax(280px, 1.3fr);
+        gap: 14px;
+        padding: 14px;
+        margin-bottom: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f8f9ff;
+      }
+      .quote-files {
+        min-height: 20px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .quote-add-item {
+        margin-top: 12px;
+      }
+      .item-card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+        padding: 16px;
+      }
+      .item-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .item-badge {
+        display: inline-flex;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #edf1ff;
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .field-group label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .vendor-picker {
+        position: relative;
+      }
+      .vendor-results {
+        position: absolute;
+        z-index: 5;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        max-height: 260px;
+        overflow-y: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+        box-shadow: var(--shadow);
+      }
+      .vendor-results[hidden] {
+        display: none;
+      }
+      .vendor-result {
+        display: block;
+        width: 100%;
+        padding: 9px 11px;
+        border-radius: 0;
+        background: white;
+        color: var(--text);
+        text-align: left;
+        font-weight: 500;
+      }
+      .vendor-result:hover,
+      .vendor-result:focus-visible {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .vendor-empty {
+        padding: 10px 11px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .field-wide {
+        grid-column: span 3;
+      }
+      .line-total {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+        margin-top: 12px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .batch-box {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        background: #f8f9ff;
+        margin-top: 12px;
+      }
+      .hidden {
+        display: none;
+      }
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .status.draft { background: #eef3ff; color: #3757d9; }
+      .status.ready { background: #ebfaf2; color: var(--green); }
+      .status.rejected { background: var(--danger-soft); color: var(--danger); }
+      .master-card {
+        background: #f9fbff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 16px;
+      }
+      .muted-note {
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 4px;
+      }
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .field-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .field-wide {
+          grid-column: span 2;
+        }
+      }
+      @media (max-width: 560px) {
+        .field-grid {
+          grid-template-columns: 1fr;
+        }
+        .field-wide {
+          grid-column: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="tag">AJIN USA Purchase Request Builder</div>
+        <div class="small">Auto draft generator for EZAccount</div>
+      </div>
+
+      <div class="grid">
+        <section class="panel">
+          <h1>Purchase Request Form</h1>
+
+          <div class="master-actions">
+            <button class="secondary" type="button" id="refreshMasterBtn">Refresh choices from EZAccount</button>
+            <span class="small" id="masterStatus" role="status">Loading EZAccount choices...</span>
+          </div>
+
+          <div class="toolbar">
+            <button class="primary" type="button" id="addQuoteBtn">+ Add Quote</button>
+            <button class="secondary" type="button" id="suggestBatchBtn">Suggest Batches</button>
+            <button class="danger" type="button" id="saveDraftBtn">Save Draft</button>
+            <button class="secondary" type="button" id="sendToEzBtn">Save in EZAccount</button>
+          </div>
+
+          <div class="quote-workspace">
+            <div id="quoteTabs" class="quote-tabs" role="tablist" aria-label="Quotes"></div>
+            <div id="quotePanels"></div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h2>Summary</h2>
+          <div class="summary-grid">
+            <div>
+              <div class="small">Estimated total</div>
+              <h3 id="totalEstimate">$0.00</h3>
+            </div>
+            <div>
+              <div class="small">Recommended batches</div>
+              <h3 id="batchCount">0</h3>
+            </div>
+          </div>
+
+          <div id="batchSummary"></div>
+
+          <h3 style="margin-top: 20px;">Rejected PRs</h3>
+          <div id="prList"></div>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      const quoteTabsEl = document.getElementById('quoteTabs');
+      const quotePanelsEl = document.getElementById('quotePanels');
+      const totalEstimateEl = document.getElementById('totalEstimate');
+      const batchSummaryEl = document.getElementById('batchSummary');
+      const batchCountEl = document.getElementById('batchCount');
+      const prListEl = document.getElementById('prList');
+      const vendorOptions = [];
+      const glAccountOptions = [];
+      const costCenterOptions = [];
+      const masterStatusEl = document.getElementById('masterStatus');
+      let currentRequestId = null;
+      let activeQuoteId = null;
+      let quoteCounter = 0;
+
+      function currency(value) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value || 0));
+      }
+
+      function buildItemRow(item = {}) {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+
+        const glAccountSelectHtml = choiceOptionsHtml(glAccountOptions, item.gl_account, 'Select G/L Account');
+        const costCenterSelectHtml = choiceOptionsHtml(costCenterOptions, item.cost_center, 'Select Cost Center');
+        const initialVendor = vendorOptions.find(vendor => vendor.code === (item.vendor_code || ''));
+        const initialVendorLabel = initialVendor ? `${initialVendor.code} - ${initialVendor.name}` : (item.vendor_name || '');
+
+        card.innerHTML = `
+          <div class="item-card-header">
+            <span class="item-badge">Item</span>
+            <button class="danger" type="button" data-remove-row>Remove</button>
+          </div>
+          <div class="field-grid">
+            <div class="field-group">
+              <label>Item Name</label>
+              <input name="item_name" value="${item.item_name || ''}" placeholder="Item name" />
+            </div>
+            <div class="field-group field-wide">
+              <label>Purchase Reason</label>
+              <textarea name="purchase_reason" placeholder="Purchase reason">${item.purchase_reason || ''}</textarea>
+            </div>
+            <div class="field-group">
+              <label>Qty</label>
+              <input type="number" step="0.01" name="quantity" value="${item.quantity || 1}" />
+            </div>
+            <div class="field-group">
+              <label>Unit Price</label>
+              <input type="number" step="0.01" name="unit_price" value="${item.unit_price || 0}" />
+            </div>
+            <div class="field-group">
+              <label>Material Group</label>
+              <input name="material_group" value="${item.material_group || '90ETCZ'}" placeholder="90ETCZ" />
+            </div>
+            <div class="field-group">
+              <label>Manufacturing Part No</label>
+              <input name="manufacturing_part_no" value="${item.manufacturing_part_no || ''}" placeholder="Part number" />
+            </div>
+            <div class="field-group">
+              <label>G/L Account</label>
+              <select name="gl_account">${glAccountSelectHtml}</select>
+            </div>
+            <div class="field-group">
+              <label>Supplier</label>
+              <div class="vendor-picker">
+                <input type="search" name="vendor_search" value="${initialVendorLabel}" placeholder="Search supplier name or code" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" />
+                <input type="hidden" name="vendor_code" value="${item.vendor_code || ''}" />
+                <div class="vendor-results" role="listbox" hidden></div>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Cost Center</label>
+              <select name="cost_center">${costCenterSelectHtml}</select>
+            </div>
+            <div class="field-group">
+              <label>Reference Link</label>
+              <input name="item_link" value="${item.item_link || ''}" placeholder="https://..." />
+            </div>
+          </div>
+          <div class="line-total">
+            <span class="small">Line total</span>
+            <span class="lineTotal">${currency((Number(item.quantity || 0) * Number(item.unit_price || 0)))}</span>
+          </div>
+        `;
+
+        const qtyInput = card.querySelector('[name="quantity"]');
+        const unitInput = card.querySelector('[name="unit_price"]');
+        const totalLabel = card.querySelector('.lineTotal');
+        const vendorSearch = card.querySelector('[name="vendor_search"]');
+        vendorSearch.addEventListener('input', () => {
+          card.querySelector('[name="vendor_code"]').value = '';
+          showVendorMatches(card);
+        });
+        vendorSearch.addEventListener('focus', () => showVendorMatches(card));
+        vendorSearch.addEventListener('keydown', event => {
+          if (event.key === 'Escape') {
+            card.querySelector('.vendor-results').hidden = true;
+            vendorSearch.setAttribute('aria-expanded', 'false');
+          }
+          if (event.key === 'ArrowDown') {
+            card.querySelector('.vendor-result')?.focus();
+          }
+        });
+
+        const recalc = () => {
+          const qty = Number(qtyInput.value || 0);
+          const unit = Number(unitInput.value || 0);
+          totalLabel.textContent = currency(qty * unit);
+          updateTotals();
+        };
+
+        qtyInput.addEventListener('input', recalc);
+        unitInput.addEventListener('input', recalc);
+        card.querySelector('[data-remove-row]').addEventListener('click', () => {
+          card.remove();
+          updateTotals();
+        });
+
+        return card;
+      }
+
+      function updateTotals() {
+        const cards = [...quotePanelsEl.querySelectorAll('.item-card')];
+        let total = 0;
+        cards.forEach(card => {
+          const qty = Number(card.querySelector('[name="quantity"]').value || 0);
+          const unit = Number(card.querySelector('[name="unit_price"]').value || 0);
+          total += qty * unit;
+        });
+        totalEstimateEl.textContent = currency(total);
+      }
+
+      function choiceOptionsHtml(options, selectedValue, placeholder) {
+        return [
+          `<option value="">${placeholder}</option>`,
+          ...options.map(option => `<option value="${option.code}" ${option.code === (selectedValue || '') ? 'selected' : ''}>${option.code} - ${option.name}</option>`)
+        ].join('');
+      }
+
+      function showVendorMatches(card) {
+        const search = card.querySelector('[name="vendor_search"]');
+        const results = card.querySelector('.vendor-results');
+        const query = search.value.trim().toLocaleLowerCase();
+        results.replaceChildren();
+        if (!query) {
+          results.hidden = true;
+          search.setAttribute('aria-expanded', 'false');
+          return;
+        }
+
+        const matches = vendorOptions.filter(vendor => `${vendor.code} ${vendor.name}`.toLocaleLowerCase().includes(query));
+        if (!matches.length) {
+          const empty = document.createElement('div');
+          empty.className = 'vendor-empty';
+          empty.textContent = 'No matching suppliers';
+          results.appendChild(empty);
+        } else {
+          matches.slice(0, 50).forEach(vendor => {
+            const option = document.createElement('button');
+            option.type = 'button';
+            option.className = 'vendor-result';
+            option.setAttribute('role', 'option');
+            option.textContent = `${vendor.code} - ${vendor.name}`;
+            option.addEventListener('click', () => {
+              card.querySelector('[name="vendor_code"]').value = vendor.code;
+              search.value = option.textContent;
+              results.hidden = true;
+              search.setAttribute('aria-expanded', 'false');
+            });
+            results.appendChild(option);
+          });
+          if (matches.length > 50) {
+            const more = document.createElement('div');
+            more.className = 'vendor-empty';
+            more.textContent = `${matches.length - 50} more matches. Refine the search.`;
+            results.appendChild(more);
+          }
+        }
+        results.hidden = false;
+        search.setAttribute('aria-expanded', 'true');
+      }
+
+      function addBlankRow(panel) {
+        panel.querySelector('.item-list').appendChild(buildItemRow({
+          quantity: 1,
+          unit_price: 0,
+        }));
+        updateTotals();
+      }
+
+      function activateQuote(quoteId) {
+        activeQuoteId = quoteId;
+        quoteTabsEl.querySelectorAll('[role="tab"]').forEach(tab => {
+          const selected = tab.dataset.quoteId === quoteId;
+          tab.setAttribute('aria-selected', String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+        });
+        quotePanelsEl.querySelectorAll('[data-quote-panel]').forEach(panel => {
+          panel.hidden = panel.dataset.quoteId !== quoteId;
+        });
+      }
+
+      function addQuoteTab() {
+        quoteCounter += 1;
+        const quoteId = `quote-${quoteCounter}`;
+        const tab = document.createElement('button');
+        tab.className = 'quote-tab';
+        tab.type = 'button';
+        tab.setAttribute('role', 'tab');
+        tab.dataset.quoteId = quoteId;
+        tab.textContent = quoteId;
+        tab.addEventListener('click', () => activateQuote(quoteId));
+        quoteTabsEl.appendChild(tab);
+
+        const panel = document.createElement('section');
+        panel.className = 'quote-panel';
+        panel.dataset.quotePanel = '';
+        panel.dataset.quoteId = quoteId;
+        panel.innerHTML = `
+          <div class="quote-settings">
+            <div class="field-group">
+              <label>Quote Group</label>
+              <input name="quote_group" value="${quoteId}" />
+            </div>
+            <div class="field-group">
+              <label>Shared Quote Attachments</label>
+              <input type="file" name="quote_attachments" multiple accept=".eml,.jpg,.jpeg,.gif,.png,.pdf,.docx,.pptx,.xlsx,.msg" />
+              <div class="quote-files" aria-live="polite">No files selected</div>
+            </div>
+          </div>
+          <div class="item-list"></div>
+          <button class="secondary quote-add-item" type="button" data-add-quote-item>+ Add Item</button>
+        `;
+        quotePanelsEl.appendChild(panel);
+        panel.querySelector('[data-add-quote-item]').addEventListener('click', () => addBlankRow(panel));
+        panel.querySelector('[name="quote_attachments"]').addEventListener('change', event => {
+          const files = [...event.target.files];
+          panel.querySelector('.quote-files').textContent = files.length
+            ? files.map((file, index) => `${index + 1}. ${file.name}`).join('  ·  ')
+            : 'No files selected';
+        });
+        addBlankRow(panel);
+        activateQuote(quoteId);
+      }
+
+      async function loadMasters() {
+        const res = await fetch('/api/masters');
+        const json = await res.json();
+        vendorOptions.splice(0, vendorOptions.length, ...(json.vendors || []));
+        glAccountOptions.splice(0, glAccountOptions.length, ...(json.gl_accounts || []));
+        costCenterOptions.splice(0, costCenterOptions.length, ...(json.cost_centers || []));
+        if (!document.getElementById('refreshMasterBtn').disabled) {
+          masterStatusEl.textContent = json.refreshed_at
+            ? `Loaded verified EZAccount choices: ${vendorOptions.length} vendors, ${glAccountOptions.length} G/L accounts, ${costCenterOptions.length} cost centers.`
+            : 'No verified EZAccount choices. Refresh to load them.';
+        }
+
+        [...quotePanelsEl.querySelectorAll('.item-card')].forEach(card => {
+          const vendorCodeInput = card.querySelector('[name="vendor_code"]');
+          const vendorValue = vendorCodeInput.value;
+          const glValue = card.querySelector('[name="gl_account"]').value;
+          const costCenterValue = card.querySelector('[name="cost_center"]').value;
+
+          const vendor = vendorOptions.find(option => option.code === vendorValue);
+          if (vendor && !card.querySelector('[name="vendor_search"]').value) {
+            card.querySelector('[name="vendor_search"]').value = `${vendor.code} - ${vendor.name}`;
+          }
+          card.querySelector('[name="gl_account"]').innerHTML = choiceOptionsHtml(glAccountOptions, glValue, 'Select G/L Account');
+          card.querySelector('[name="cost_center"]').innerHTML = choiceOptionsHtml(costCenterOptions, costCenterValue, 'Select Cost Center');
+        });
+
+        if (!quotePanelsEl.children.length) addQuoteTab();
+      }
+
+      async function fetchPrs() {
+        const res = await fetch('/api/requests');
+        const json = await res.json();
+        const rejectedItems = (json.items || []).filter(pr => pr.status === 'rejected');
+        if (!rejectedItems.length) {
+          prListEl.innerHTML = '<div class="small">No rejected PRs waiting for resubmission.</div>';
+          return;
+        }
+
+        prListEl.innerHTML = rejectedItems.map(pr => {
+          return `
+          <div class="batch-box">
+            <div><strong>PR #${pr.id}</strong> <span class="status rejected">Rejected · ready to resubmit</span></div>
+            <div class="small">Revision: ${pr.revision} | Total: ${currency(pr.total_amount)}</div>
+            ${pr.ez_doc_no ? `<div class="small">EZAccount: ${pr.ez_doc_no}${pr.ez_status ? ` · ${pr.ez_status}` : ''}</div>` : ''}
+            ${rejected ? `<button class="secondary" type="button" data-resubmit-request="${pr.id}">Resubmit PR</button>` : ''}
+          </div>
+        `;
+        }).join('');
+
+        prListEl.querySelectorAll('[data-resubmit-request]').forEach(button => {
+          button.addEventListener('click', async () => {
+            const requestId = button.dataset.resubmitRequest;
+            button.disabled = true;
+            try {
+              const response = await fetch(`/api/pr/${requestId}/ezaccount`, { method: 'POST' });
+              const result = await response.json();
+              if (!result.ok) {
+                alert(result.error || 'EZAccount 재제출에 실패했습니다.');
+                return;
+              }
+              alert(`EZAccount에 Draft로 저장했습니다. 내용을 확인한 뒤 Submit을 직접 누르세요. Document: ${result.document_no || 'n/a'}`);
+              await fetchPrs();
+            } finally {
+              button.disabled = false;
+            }
+          });
+        });
+      }
+
+      function collectItems() {
+        return [...quotePanelsEl.querySelectorAll('[data-quote-panel]')].flatMap(panel => {
+          const quoteGroup = panel.querySelector('[name="quote_group"]').value.trim();
+          return [...panel.querySelectorAll('.item-card')].map(card => {
+          const vendorCode = card.querySelector('[name="vendor_code"]').value;
+          const selectedVendor = vendorOptions.find(vendor => vendor.code === vendorCode);
+          const vendorName = selectedVendor ? selectedVendor.name : '';
+          const qty = Number(card.querySelector('[name="quantity"]').value || 0);
+          const unitPrice = Number(card.querySelector('[name="unit_price"]').value || 0);
+          const total = qty * unitPrice;
+          return {
+            quote_group: quoteGroup,
+            item_name: card.querySelector('[name="item_name"]').value,
+            purchase_reason: card.querySelector('[name="purchase_reason"]').value,
+            quantity: qty,
+            unit_price: unitPrice,
+            total_price: total,
+            vendor_code: vendorCode,
+            vendor_name: vendorName,
+            material_group: card.querySelector('[name="material_group"]').value.trim(),
+            manufacturing_part_no: card.querySelector('[name="manufacturing_part_no"]').value.trim(),
+            gl_account: card.querySelector('[name="gl_account"]').value,
+            cost_center: card.querySelector('[name="cost_center"]').value,
+            item_link: card.querySelector('[name="item_link"]').value,
+          };
+          });
+        }).filter(item => item.item_name || item.purchase_reason || item.quantity || item.unit_price);
+      }
+
+      function collectQuoteAttachments(formData) {
+        const manifest = [];
+        [...quotePanelsEl.querySelectorAll('[data-quote-panel]')].forEach(panel => {
+          const quoteGroup = panel.querySelector('[name="quote_group"]').value.trim();
+          const files = [...panel.querySelector('[name="quote_attachments"]').files];
+          files.forEach(file => {
+            const fileIndex = manifest.length;
+            manifest.push({
+              quote_group: quoteGroup,
+              original_name: file.name,
+              display_order: fileIndex + 1,
+            });
+            formData.append('files', file, file.name);
+          });
+        });
+        return manifest;
+      }
+
+      function renderBatchSummary(items) {
+        const cap = 10000;
+        const groups = {};
+        for (const item of items) {
+          const key = item.quote_group || 'ungrouped';
+          groups[key] = groups[key] || { key, total: 0, items: [] };
+          groups[key].items.push(item);
+          groups[key].total += Number(item.total_price || 0);
+        }
+
+        const sorted = Object.values(groups).sort((a, b) => b.total - a.total);
+        const batches = [];
+        for (const group of sorted) {
+          let placed = false;
+          for (const batch of batches) {
+            if (batch.total + group.total <= cap) {
+              batch.total += group.total;
+              batch.groups.push(group);
+              placed = true;
+              break;
+            }
+          }
+          if (!placed) {
+            batches.push({ total: group.total, groups: [group] });
+          }
+        }
+
+        batchCountEl.textContent = String(batches.length);
+        batchSummaryEl.innerHTML = batches.map((batch, index) => `
+          <div class="batch-box">
+            <strong>Batch ${index + 1}</strong>
+            <div class="small">Total: ${currency(batch.total)}</div>
+            <ul>
+              ${batch.groups.map(g => `<li>${g.key}: ${currency(g.total)}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('addQuoteBtn').addEventListener('click', addQuoteTab);
+      document.getElementById('suggestBatchBtn').addEventListener('click', () => {
+        renderBatchSummary(collectItems());
+      });
+
+      async function refreshMasters() {
+        masterStatusEl.textContent = 'Connecting to EZAccount...';
+        const refreshButton = document.getElementById('refreshMasterBtn');
+        refreshButton.disabled = true;
+        try {
+          const res = await fetch('/api/masters/refresh', { method: 'POST' });
+          const json = await res.json();
+          await loadMasters();
+          if (!json.ok) {
+            masterStatusEl.textContent = json.refreshed_at
+              ? `${json.error || 'Refresh failed'} Showing last verified EZAccount choices.`
+              : `${json.error || 'Refresh failed'} No verified choices are available.`;
+          } else {
+            const counts = json.updated;
+            masterStatusEl.textContent = `Loaded ${counts.vendors} vendors, ${counts.gl_accounts} G/L accounts, ${counts.cost_centers} cost centers from EZAccount.`;
+          }
+        } catch (error) {
+          await loadMasters();
+          masterStatusEl.textContent = `Could not connect to EZAccount: ${error.message}`;
+        } finally {
+          refreshButton.disabled = false;
+        }
+      }
+
+      document.getElementById('refreshMasterBtn').addEventListener('click', refreshMasters);
+
+      document.getElementById('saveDraftBtn').addEventListener('click', async () => {
+        const items = collectItems();
+        if (!items.length) {
+          alert('Please add at least one item.');
+          return;
+        }
+        renderBatchSummary(items);
+
+        const formData = new FormData();
+        formData.append('items', JSON.stringify(items));
+        formData.append('attachment_manifest', JSON.stringify(collectQuoteAttachments(formData)));
+        const response = await fetch('/api/pr', { method: 'POST', body: formData });
+
+        const json = await response.json();
+        if (!json.ok) {
+          alert(json.error || 'Unable to save draft');
+          return;
+        }
+
+        currentRequestId = json.request_id;
+        alert(`Draft saved. Request ID: ${json.request_id}`);
+        fetchPrs();
+      });
+
+      document.getElementById('sendToEzBtn').addEventListener('click', async () => {
+        if (!currentRequestId) {
+          alert('먼저 Save Draft로 PR을 생성하세요.');
+          return;
+        }
+
+        const response = await fetch(`/api/pr/${currentRequestId}/ezaccount`, { method: 'POST' });
+        const json = await response.json();
+        if (!json.ok) {
+          alert(json.error || 'EZAccount 자동입력 실패');
+          return;
+        }
+
+        alert(`EZAccount에 Draft로 저장했습니다. 내용을 확인한 뒤 Submit을 직접 누르세요. Document: ${json.document_no || 'n/a'}`);
+      });
+
+      addQuoteTab();
+      loadMasters();
+      fetchPrs();
+      window.setInterval(fetchPrs, 60000);
+    </script>
+  </body>
+</html>

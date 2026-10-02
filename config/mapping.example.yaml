@@ -1,0 +1,25 @@
+rules:
+  - name: maintenance
+    conditions:
+      Department: "MAINT"
+    value: "MT"
+  - name: assy
+    conditions:
+      Department: "ASSY"
+    value: "Ass'y"
+  - name: default
+    value: "AJINUSA MAINTENANCE"
+
+source_to_excel:
+  USE: USE
+  DraftResponsible: 기안자
+  DocumentDate: 작성날짜
+  AssetName: 자산명 (Name of Asset)
+  PRNo: 문서번호 (Document Number)
+  VendorName: 업체명 (Vendor)
+  Specification: 사양 및 모델 번호 (Specification / Model Number)
+  Quantity: 수량 (Quantity)
+  PONumber: P.O NUMBER
+  ReceiptFlag: 입고유무
+  Purpose: 용도
+  Note: 비고

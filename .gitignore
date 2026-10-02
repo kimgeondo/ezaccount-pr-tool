@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+logs/
+output/
+state/*.db
+state/*.sqlite
+state/*.json
+uploads/
+config/config.json
+config/mapping.yaml
+config/company_masters.json
+debug_*.py
+*.tmp.xlsx
