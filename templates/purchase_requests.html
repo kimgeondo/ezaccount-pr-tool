@@ -434,7 +434,6 @@
             <button class="primary" type="button" id="addQuoteBtn">+ Add Quote</button>
             <button class="secondary" type="button" id="suggestBatchBtn">Suggest Batches</button>
             <button class="danger" type="button" id="saveDraftBtn">Save Draft</button>
-            <button class="secondary" type="button" id="sendToEzBtn">Save in EZAccount</button>
           </div>
 
           <div class="quote-workspace">
@@ -457,6 +456,8 @@
           </div>
 
           <div id="batchSummary"></div>
+
+          <button class="secondary" style="width: 100%; margin-top: 15px; margin-bottom: 20px; font-weight: bold;" type="button" id="sendToEzBtn">Save in EZAccount (Send)</button>
 
           <div id="prList"></div>
         </aside>
@@ -537,10 +538,7 @@
               <label>Cost Center</label>
               <select name="cost_center">${costCenterSelectHtml}</select>
             </div>
-            <div class="field-group">
-              <label>Reference Link</label>
-              <input name="item_link" value="${item.item_link || ''}" placeholder="https://..." />
-            </div>
+
           </div>
           <div class="line-total">
             <span class="small">Line total</span>
@@ -687,6 +685,10 @@
               <label>Quote Group</label>
               <input name="quote_group" value="${quoteId}" />
             </div>
+            <div class="field-group" style="margin-bottom: 15px;">
+              <label>Reference Link</label>
+              <input name="item_link" placeholder="https://..." style="width: 100%; margin-bottom: 10px;" />
+            </div>
             <div class="field-group">
               <label>Shared Quote Attachments</label>
               <input type="file" name="quote_attachments" multiple accept=".eml,.jpg,.jpeg,.gif,.png,.pdf,.docx,.pptx,.xlsx,.msg" />
@@ -803,7 +805,7 @@
             manufacturing_part_no: card.querySelector('[name="manufacturing_part_no"]').value.trim(),
             gl_account: card.querySelector('[name="gl_account"]').value,
             cost_center: card.querySelector('[name="cost_center"]').value,
-            item_link: card.querySelector('[name="item_link"]').value,
+            item_link: panel.querySelector('[name="item_link"]').value,
           };
           });
         }).filter(item => item.item_name || item.purchase_reason || item.quantity || item.unit_price);
