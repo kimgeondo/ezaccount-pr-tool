@@ -36,11 +36,11 @@ _rejection_monitor_started = False
 def get_ezaccount_credentials() -> Tuple[str, str]:
     load_dotenv(BASE_DIR / ".env", override=True)
     username = (os.getenv("EZACCOUNT_USERNAME") or "").strip()
-    if username == "your_user_id" or not username:
-        username = "A260126"
     password = (os.getenv("EZACCOUNT_PASSWORD") or "").strip()
+    if username == "your_user_id" or not username:
+        username = ""
     if password == "your_password" or not password:
-        password = "init1234"
+        password = ""
     return username, password
 
 
