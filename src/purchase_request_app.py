@@ -1083,14 +1083,25 @@ def run_ezaccount_automation(request_id: int) -> Dict[str, Any]:
                     nested = page.locator("li[title='Purchase Request']").first
                     if nested.count() > 0:
                         nested.click(timeout=20000, force=True)
+                        pr_nav_ok = True
+                        break
                 else:
                     loc.click(timeout=20000, force=True)
 
                 page.wait_for_timeout(5000)
-                if page.url != current_url or page.locator("text=Purchase Request").count() > 0 or "PurchaseRequest" in page.url or "PurchaseDocument" in page.url:
+                if "PurchaseDocument" in page.url or "PurchaseRequest" in page.url or page.locator("button:has-text('New')").count() > 0:
                     pr_nav_ok = True
                     logging.info("PR navigation appears successful via selector=%s final_url=%s", selector, page.url)
                     break
+                else:
+                    nested = page.locator("li[title='Purchase Request']").first
+                    if nested.count() > 0:
+                        nested.click(timeout=20000, force=True)
+                        page.wait_for_timeout(5000)
+                        if "PurchaseDocument" in page.url or "PurchaseRequest" in page.url or page.locator("button:has-text('New')").count() > 0:
+                            pr_nav_ok = True
+                            logging.info("PR navigation appears successful after nested click via selector=%s final_url=%s", selector, page.url)
+                            break
             except Exception as exc:
                 logging.warning("PR nav selector failed: %s -> %s", selector, exc)
 

@@ -458,7 +458,6 @@
 
           <div id="batchSummary"></div>
 
-          <h3 style="margin-top: 20px;">Rejected PRs</h3>
           <div id="prList"></div>
         </aside>
       </div>
@@ -747,13 +746,16 @@
           return;
         }
 
-        prListEl.innerHTML = rejectedItems.map(pr => {
+        prListEl.innerHTML = `<h3 style="margin-top: 20px;">Rejected PRs</h3>` + rejectedItems.map(pr => {
           return `
           <div class="batch-box">
-            <div><strong>PR #${pr.id}</strong> <span class="status rejected">Rejected · ready to resubmit</span></div>
-            <div class="small">Revision: ${pr.revision} | Total: ${currency(pr.total_amount)}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong>PR #${pr.id}</strong>
+              <span class="status rejected">Rejected · ready to resubmit</span>
+            </div>
+            <div class="small" style="margin-top: 8px;">Revision: ${pr.revision} | Total: ${currency(pr.total_amount)}</div>
             ${pr.ez_doc_no ? `<div class="small">EZAccount: ${pr.ez_doc_no}${pr.ez_status ? ` · ${pr.ez_status}` : ''}</div>` : ''}
-            ${rejected ? `<button class="secondary" type="button" data-resubmit-request="${pr.id}">Resubmit PR</button>` : ''}
+            <button class="secondary" style="margin-top: 12px; width: 100%;" type="button" data-resubmit-request="${pr.id}">Resubmit PR</button>
           </div>
         `;
         }).join('');
