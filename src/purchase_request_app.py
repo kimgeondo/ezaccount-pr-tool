@@ -36,7 +36,11 @@ _rejection_monitor_started = False
 def get_ezaccount_credentials() -> Tuple[str, str]:
     load_dotenv(BASE_DIR / ".env", override=True)
     username = (os.getenv("EZACCOUNT_USERNAME") or "").strip()
+    if username == "your_user_id" or not username:
+        username = "A260126"
     password = (os.getenv("EZACCOUNT_PASSWORD") or "").strip()
+    if password == "your_password" or not password:
+        password = "init1234"
     return username, password
 
 
@@ -1057,11 +1061,6 @@ def run_ezaccount_automation(request_id: int) -> Dict[str, Any]:
         ]
         current_url = page.url
         pr_nav_ok = False
-        # Check if the page is literally asking to clear the cache instead
-        if page.locator("text='Minor changes were applied'").count() > 0 and page.locator("text='OK'").count() > 0:
-             page.locator("text='OK'").click(timeout=5000, force=True)
-             page.wait_for_timeout(3000)
-
         for selector in nav_selectors:
             try:
                 loc = page.locator(selector).first
@@ -1071,45 +1070,28 @@ def run_ezaccount_automation(request_id: int) -> Dict[str, Any]:
                 dismiss_any_popup()
                 page.wait_for_timeout(1000)
                 loc.scroll_into_view_if_needed()
-                try:
-                    page.wait_for_function(
-                        """
-                        () => {
-                            const block = document.getElementById('sap-ui-blocklayer-popup');
-                            return !block || getComputedStyle(block).display === 'none' || getComputedStyle(block).visibility === 'hidden';
-                        }
-                        """,
-                        timeout=10000,
-                    )
-                except Exception:
-                    pass
-
-                # Clear remaining block layers forcefully via JS
-                page.evaluate("""
+                page.wait_for_function(
+                    """
                     () => {
-                        const els = document.querySelectorAll('#sap-ui-blocklayer-popup, #sap-ui-blocklayer, .sapUiBLy, .sapUiBlockLayer');
-                        for (const el of els) el.remove();
+                        const block = document.getElementById('sap-ui-blocklayer-popup');
+                        return !block || getComputedStyle(block).display === 'none' || getComputedStyle(block).visibility === 'hidden';
                     }
-                """)
+                    """,
+                    timeout=20000,
+                )
 
                 # SAP UI5 navigation is hierarchical: group item first, then nested Purchase Request item.
-                try:
-                    page.evaluate(f"() => {{ const el = document.querySelector('{selector}'); if (el) el.click(); }}")
-                except Exception:
-                    loc.click(timeout=10000, force=True)
+                if selector in ("div[title='Purchase Request']", "div[title=\"Purchase Request\"]"):
+                    loc.click(timeout=20000, force=True)
+                    page.wait_for_timeout(2000)
+                    nested = page.locator("li[title='Purchase Request']").first
+                    if nested.count() > 0:
+                        nested.click(timeout=20000, force=True)
+                else:
+                    loc.click(timeout=20000, force=True)
 
-                page.wait_for_timeout(3000)
-
-                nested = page.locator("li[title='Purchase Request']").first
-                if nested.count() > 0:
-                    try:
-                        page.evaluate("() => { const el = document.querySelector('li[title=\'Purchase Request\']'); if (el) el.click(); }")
-                    except Exception:
-                        nested.click(timeout=10000, force=True)
-                    page.wait_for_timeout(3000)
-
-                # Check for any kind of success indicator
-                if "PurchaseDocument" in page.url or "PurchaseRequest" in page.url or page.locator("button:has-text('New')").count() > 0 or page.locator("text=Purchase Request").count() > 1:
+                page.wait_for_timeout(5000)
+                if page.url != current_url or page.locator("text=Purchase Request").count() > 0 or "PurchaseRequest" in page.url or "PurchaseDocument" in page.url:
                     pr_nav_ok = True
                     logging.info("PR navigation appears successful via selector=%s final_url=%s", selector, page.url)
                     break
