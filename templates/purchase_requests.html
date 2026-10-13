@@ -1,29 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AJIN USA Purchase Request Builder</title>
-    <style>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>AJIN USA Purchase Request Builder</title>
+<style>
 
       :root {
-        --primary: #0071e3;
-        --primary-soft: #f5f5f7;
-        --primary-hover: #0077ED;
-        --bg: #f5f5f7;
-        --card: #ffffff;
-        --line: #d2d2d7;
-        --text: #1d1d1f;
-        --muted: #86868b;
-        --danger: #ff3b30;
-        --danger-soft: #ffeceb;
-        --danger-hover: #ff453a;
-        --green: #34c759;
-        --shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0,0,0,0.08);
-        --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0,0,0,0.08);
-        --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --primary: #00ff00;
+        --primary-soft: #1a4d1a;
+        --primary-hover: #00cc00;
+        --bg: #0c0c0c;
+        --card: #1e1e1e;
+        --line: #333333;
+        --text: #00ff00;
+        --muted: #888888;
+        --danger: #ff0000;
+        --danger-soft: #4d0000;
+        --danger-hover: #cc0000;
+        --green: #00ff00;
+        --shadow: none;
+        --shadow-hover: none;
+        --font-family: "Courier New", Courier, monospace;
       }
-      * { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: var(--font-family);
@@ -34,207 +35,204 @@
       }
       .wrap {
         max-width: 1200px;
-        margin: 40px auto;
+        margin: 20px auto;
         padding: 0 20px 60px;
       }
       .topbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 10px;
       }
       .tag {
-        font-size: 24px;
-        font-weight: 600;
-        letter-spacing: -0.015em;
+        font-size: 20px;
+        font-weight: bold;
         color: var(--text);
       }
       .grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 340px;
-        gap: 30px;
+        gap: 20px;
       }
       .panel {
         background: var(--card);
-        border-radius: 18px;
-        padding: 30px;
-        box-shadow: var(--shadow);
+        border: 1px solid var(--line);
+        padding: 20px;
       }
       h1, h2, h3 {
         margin-top: 0;
         color: var(--text);
-        font-weight: 600;
-        letter-spacing: -0.01em;
+        font-weight: normal;
+        text-transform: uppercase;
       }
-      h1 { font-size: 28px; margin-bottom: 24px; }
-      h2 { font-size: 20px; margin-bottom: 16px; border-bottom: 1px solid var(--primary-soft); padding-bottom: 12px; }
-      h3 { font-size: 16px; margin-bottom: 12px; }
+      h1 { font-size: 24px; margin-bottom: 20px; }
+      h1::before { content: "root@ezaccount:~# "; color: var(--muted); }
+      h2 { font-size: 18px; margin-bottom: 15px; border-bottom: 1px dashed var(--line); padding-bottom: 5px; }
+      h3 { font-size: 16px; margin-bottom: 10px; }
       .field {
         display: flex;
         flex-direction: column;
-        gap: 6px;
-        margin-bottom: 16px;
+        gap: 4px;
+        margin-bottom: 15px;
       }
       .field label {
         font-size: 12px;
         color: var(--muted);
-        font-weight: 500;
       }
       input, select, textarea, button {
         font: inherit;
-        transition: all 0.2s ease;
       }
       input, select, textarea {
         width: 100%;
-        padding: 12px 14px;
+        padding: 8px 10px;
         border: 1px solid var(--line);
-        border-radius: 12px;
-        background: var(--card);
+        background: var(--bg);
         color: var(--text);
         font-size: 14px;
+        border-radius: 0;
       }
-      input::placeholder, textarea::placeholder { color: #a1a1a6; }
+      input::placeholder, textarea::placeholder { color: var(--muted); }
       input:focus, select:focus, textarea:focus {
         outline: none;
         border-color: var(--primary);
-        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+        background: #111;
       }
       textarea {
         resize: vertical;
         min-height: 80px;
       }
       button {
-        border: none;
-        border-radius: 980px;
-        padding: 8px 16px;
+        border: 1px solid var(--primary);
+        background: var(--bg);
+        color: var(--primary);
+        border-radius: 0;
+        padding: 6px 12px;
         font-size: 14px;
-        font-weight: 500;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        text-transform: uppercase;
       }
-      button:focus-visible {
+      button:hover, button:focus-visible {
+        background: var(--primary);
+        color: var(--bg);
         outline: none;
-        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.3);
       }
       .primary {
         background: var(--primary);
-        color: white;
+        color: var(--bg);
+        font-weight: bold;
       }
-      .primary:hover { background: var(--primary-hover); }
+      .primary:hover { background: var(--primary-hover); color: var(--bg); }
       .secondary {
-        background: var(--primary-soft);
-        color: var(--primary);
+        border-color: var(--muted);
+        color: var(--muted);
       }
-      .secondary:hover { background: #e8e8ed; }
+      .secondary:hover { background: var(--muted); color: var(--bg); border-color: var(--muted); }
       .danger {
-        background: var(--danger);
-        color: white;
+        border-color: var(--danger);
+        color: var(--danger);
       }
-      .danger:hover { background: var(--danger-hover); }
+      .danger:hover { background: var(--danger); color: var(--bg); }
       .toolbar {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin: 24px 0;
-        padding-top: 24px;
-        border-top: 1px solid var(--primary-soft);
+        gap: 10px;
+        margin: 20px 0;
+        padding-top: 20px;
+        border-top: 1px dashed var(--line);
       }
       .master-actions {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 10px;
         flex-wrap: wrap;
-        padding: 16px;
-        background: var(--primary-soft);
-        border-radius: 14px;
-        margin-bottom: 24px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        margin-bottom: 20px;
       }
       .item-list {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
       }
       .quote-workspace {
         margin-top: 20px;
       }
       .quote-tabs {
         display: flex;
-        gap: 8px;
+        gap: 5px;
         overflow-x: auto;
-        padding-bottom: 12px;
+        padding-bottom: 10px;
         border-bottom: 1px solid var(--line);
-        scrollbar-width: none;
       }
-      .quote-tabs::-webkit-scrollbar { display: none; }
       .quote-tab {
-        flex: 0 0 auto;
-        border-radius: 980px;
-        background: transparent;
+        border-radius: 0;
+        border: 1px solid var(--line);
+        background: var(--bg);
         color: var(--muted);
-        padding: 6px 16px;
+        padding: 4px 10px;
+        text-transform: none;
       }
       .quote-tab[aria-selected="true"] {
-        background: var(--text);
-        color: white;
+        border-color: var(--primary);
+        background: var(--primary-soft);
+        color: var(--primary);
       }
       .quote-panel {
-        padding-top: 24px;
-        animation: fadeIn 0.3s ease;
+        padding-top: 15px;
       }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
       .quote-panel[hidden] {
         display: none;
       }
       .quote-settings {
         display: grid;
         grid-template-columns: minmax(200px, 1fr) minmax(300px, 2fr);
-        gap: 20px;
-        padding: 20px;
-        margin-bottom: 20px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        background: #fafafa;
+        gap: 15px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px dashed var(--line);
+        background: var(--bg);
       }
       .quote-files {
         min-height: 20px;
         color: var(--text);
         font-size: 13px;
-        margin-top: 8px;
-        background: white;
-        padding: 10px;
-        border-radius: 8px;
+        margin-top: 5px;
+        background: var(--bg);
+        padding: 5px;
         border: 1px solid var(--line);
       }
       input[type="file"] {
-        padding: 8px;
-        background: white;
-        border-radius: 8px;
+        padding: 4px;
+        background: var(--bg);
+        border: 1px dashed var(--line);
         font-size: 13px;
+        cursor: pointer;
       }
       input[type="file"]::file-selector-button {
-        background: var(--primary-soft);
-        color: var(--primary);
+        background: var(--line);
+        color: var(--text);
         border: none;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-weight: 500;
+        padding: 4px 8px;
         cursor: pointer;
         margin-right: 10px;
-        transition: background 0.2s;
+        text-transform: uppercase;
+        font-family: var(--font-family);
       }
       input[type="file"]::file-selector-button:hover {
-        background: #e8e8ed;
+        background: var(--muted);
       }
       .quote-add-item {
-        margin-top: 20px;
+        margin-top: 15px;
         width: 100%;
-        padding: 12px;
-        border: 2px dashed var(--line);
+        padding: 10px;
+        border: 1px dashed var(--muted);
         background: transparent;
         color: var(--muted);
-        border-radius: 14px;
       }
       .quote-add-item:hover {
         border-color: var(--primary);
@@ -243,40 +241,36 @@
       }
       .item-card {
         border: 1px solid var(--line);
-        border-radius: 16px;
-        background: var(--card);
-        padding: 24px;
-        transition: box-shadow 0.2s ease;
-      }
-      .item-card:hover {
-        box-shadow: var(--shadow-hover);
+        background: var(--bg);
+        padding: 15px;
       }
       .item-card-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--primary-soft);
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+        border-bottom: 1px dashed var(--line);
       }
       .item-badge {
         font-size: 14px;
-        font-weight: 600;
-        color: var(--text);
+        font-weight: bold;
+        color: var(--primary);
       }
+      .item-badge::before { content: "[ "; color: var(--muted); }
+      .item-badge::after { content: " ]"; color: var(--muted); }
       .field-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
+        gap: 10px;
       }
       .field-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
       }
       .field-group label {
         font-size: 12px;
-        font-weight: 500;
         color: var(--muted);
       }
       .vendor-picker {
@@ -285,186 +279,96 @@
       .vendor-results {
         position: absolute;
         z-index: 10;
-        top: calc(100% + 8px);
+        top: calc(100% + 4px);
         left: 0;
         right: 0;
-        max-height: 260px;
+        max-height: 200px;
         overflow-y: auto;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-        padding: 6px;
+        border: 1px solid var(--primary);
+        background: var(--bg);
+        padding: 4px;
       }
-      .vendor-results[hidden] {
-        display: none;
+      .vendor-option {
+        padding: 6px 10px;
+        cursor: pointer;
+        border-bottom: 1px dashed var(--line);
       }
-      .vendor-result {
-        display: block;
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 8px;
-        background: transparent;
-        color: var(--text);
-        text-align: left;
-        font-weight: 400;
-      }
-      .vendor-result:hover,
-      .vendor-result:focus-visible {
-        background: var(--primary);
-        color: white;
-      }
-      .vendor-empty {
-        padding: 10px 12px;
-        color: var(--muted);
-        font-size: 13px;
-        text-align: center;
-      }
-      .field-wide {
-        grid-column: span 3;
-      }
-      .line-total {
-        display: flex;
-        justify-content: flex-end;
-        align-items: baseline;
-        gap: 8px;
-        margin-top: 20px;
-        padding-top: 16px;
-        border-top: 1px solid var(--primary-soft);
-      }
-      .line-total .small {
-        font-size: 12px;
-        color: var(--muted);
-        font-weight: 500;
-      }
-      .lineTotal {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--text);
-      }
-      .small {
-        font-size: 13px;
-        color: var(--muted);
+      .vendor-option:last-child { border-bottom: none; }
+      .vendor-option:hover {
+        background: var(--primary-soft);
       }
       .batch-box {
+        background: var(--bg);
         border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 16px;
-        background: var(--card);
-        margin-bottom: 12px;
-        box-shadow: var(--shadow);
+        padding: 15px;
+        margin-bottom: 15px;
       }
-      .hidden {
-        display: none;
-      }
-      .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin-bottom: 24px;
-      }
-      .summary-box {
-        background: var(--primary-soft);
-        padding: 16px;
-        border-radius: 14px;
-      }
-      .summary-box h3 {
-        margin: 4px 0 0;
-        font-size: 24px;
-        color: var(--primary);
+      .batch-box strong { color: var(--primary); }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
       }
       .status {
-        display: inline-flex;
-        padding: 4px 10px;
-        border-radius: 980px;
+        display: inline-block;
+        padding: 2px 6px;
         font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.02em;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: 1px solid currentColor;
       }
-      .status.draft { background: #e5e5ea; color: #1d1d1f; }
-      .status.ready { background: #e3f5e1; color: var(--green); }
-      .status.rejected { background: var(--danger-soft); color: var(--danger); }
-
-      @media (max-width: 980px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-        .field-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-        .field-wide {
-          grid-column: span 2;
-        }
-        .quote-settings {
-          grid-template-columns: 1fr;
-        }
+      .status.rejected { color: var(--danger); }
+      .status.draft { color: #f5a623; }
+      .status.submitted { color: var(--primary); }
+      ul {
+        margin: 10px 0 0;
+        padding-left: 20px;
+        color: var(--muted);
       }
-      @media (max-width: 560px) {
-        .field-grid {
-          grid-template-columns: 1fr;
-        }
-        .field-wide {
-          grid-column: auto;
-        }
-        .summary-grid {
-          grid-template-columns: 1fr;
-        }
-      }
+      li { margin-bottom: 4px; }
+      li::marker { content: "> "; color: var(--primary); }
     </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <div class="topbar">
-        <div class="tag">AJIN USA Purchase Request Builder</div>
-        <div class="small">Auto draft generator for EZAccount</div>
-      </div>
-
-      <div class="grid">
-        <section class="panel">
-          <h1>Purchase Request Form</h1>
-
-          <div class="master-actions">
-            <button class="secondary" type="button" id="refreshMasterBtn">Refresh choices from EZAccount</button>
-            <span class="small" id="masterStatus" role="status">Loading EZAccount choices...</span>
-          </div>
-
-          <div class="toolbar">
-            <button class="primary" type="button" id="addQuoteBtn">+ Add Quote</button>
-            <button class="secondary" type="button" id="suggestBatchBtn">Suggest Batches</button>
-            <button class="danger" type="button" id="saveDraftBtn">Save Draft</button>
-          </div>
-
-          <div class="quote-workspace">
-            <div id="quoteTabs" class="quote-tabs" role="tablist" aria-label="Quotes"></div>
-            <div id="quotePanels"></div>
-          </div>
-        </section>
-
-        <aside class="panel">
-          <h2>Summary</h2>
-          <div class="summary-grid">
-            <div class="summary-box">
-              <div class="small">Estimated total</div>
-              <h3 id="totalEstimate">$0.00</h3>
-            </div>
-            <div class="summary-box">
-              <div class="small">Batches</div>
-              <h3 id="batchCount">0</h3>
-            </div>
-          </div>
-
-          <div id="batchSummary"></div>
-
-          <button class="secondary" style="width: 100%; margin-top: 15px; margin-bottom: 20px; font-weight: bold;" type="button" id="sendToEzBtn">Save in EZAccount (Send)</button>
-
-          <div id="prList"></div>
-        </aside>
-      </div>
-    </div>
-
-    <script>
+</head>
+<body>
+<div class="wrap">
+<div class="topbar">
+<div class="tag">AJIN USA Purchase Request Builder</div>
+<div class="small">Auto draft generator for EZAccount</div>
+</div>
+<div class="grid">
+<section class="panel">
+<h1>Purchase Request Form</h1>
+<div class="master-actions">
+<button class="secondary" id="refreshMasterBtn" type="button">Refresh choices from EZAccount</button>
+<span class="small" id="masterStatus" role="status">Loading EZAccount choices...</span>
+</div>
+<div class="quote-workspace">
+<div aria-label="Quotes" class="quote-tabs" id="quoteTabs" role="tablist"></div>
+<div id="quotePanels"></div>
+<div class="toolbar">
+<button class="primary" id="addQuoteBtn" type="button">[+] NEW_QUOTE_GROUP</button>
+<button class="secondary" id="suggestBatchBtn" type="button">[*] SUGGEST_BATCHES</button>
+<button class="danger" id="saveDraftBtn" type="button">[!] SAVE_DRAFT</button>
+</div></div>
+</section>
+<aside class="panel">
+<h2>Summary</h2>
+<div class="summary-grid">
+<div class="summary-box">
+<div class="small">Estimated total</div>
+<h3 id="totalEstimate">$0.00</h3>
+</div>
+<div class="summary-box">
+<div class="small">Batches</div>
+<h3 id="batchCount">0</h3>
+</div>
+</div>
+<div id="batchSummary"></div>
+<button class="secondary" id="sendToEzBtn" style="width: 100%; margin-top: 15px; margin-bottom: 20px; font-weight: bold;" type="button">[&gt;] PUSH_TO_EZACCOUNT</button>
+<div id="prList"></div>
+</aside>
+</div>
+</div>
+<script>
       const quoteTabsEl = document.getElementById('quoteTabs');
       const quotePanelsEl = document.getElementById('quotePanels');
       const totalEstimateEl = document.getElementById('totalEstimate');
@@ -495,39 +399,39 @@
         card.innerHTML = `
           <div class="item-card-header">
             <span class="item-badge">Item</span>
-            <button class="secondary" type="button" data-remove-row style="color: var(--danger); background: var(--danger-soft);">Remove</button>
+            <button class="secondary" type="button" data-remove-row style="color: var(--danger); background: var(--danger-soft);">[X] DROP</button>
           </div>
           <div class="field-grid">
             <div class="field-group">
-              <label>Item Name</label>
+              <label>ITEM_DESC</label>
               <input name="item_name" value="${item.item_name || ''}" placeholder="Item name" />
             </div>
             <div class="field-group field-wide">
-              <label>Purchase Reason</label>
+              <label>REASON</label>
               <textarea name="purchase_reason" placeholder="Purchase reason">${item.purchase_reason || ''}</textarea>
             </div>
             <div class="field-group">
-              <label>Qty</label>
+              <label>QTY</label>
               <input type="number" step="0.01" name="quantity" value="${item.quantity || 1}" />
             </div>
             <div class="field-group">
-              <label>Unit Price</label>
+              <label>UNIT PRICE</label>
               <input type="number" step="0.01" name="unit_price" value="${item.unit_price || 0}" />
             </div>
             <div class="field-group">
-              <label>Material Group</label>
+              <label>MAT_GROUP</label>
               <input name="material_group" value="${item.material_group || '90ETCZ'}" placeholder="90ETCZ" />
             </div>
             <div class="field-group">
-              <label>Manufacturing Part No</label>
+              <label>MANUFACTURING PART NO</label>
               <input name="manufacturing_part_no" value="${item.manufacturing_part_no || ''}" placeholder="Part number" />
             </div>
             <div class="field-group">
-              <label>G/L Account</label>
+              <label>GL_ACCOUNT</label>
               <select name="gl_account">${glAccountSelectHtml}</select>
             </div>
             <div class="field-group">
-              <label>Supplier</label>
+              <label>SUPPLIER</label>
               <div class="vendor-picker">
                 <input type="search" name="vendor_search" value="${initialVendorLabel}" placeholder="Search supplier name or code" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" />
                 <input type="hidden" name="vendor_code" value="${item.vendor_code || ''}" />
@@ -535,7 +439,7 @@
               </div>
             </div>
             <div class="field-group">
-              <label>Cost Center</label>
+              <label>COST_CENTER</label>
               <select name="cost_center">${costCenterSelectHtml}</select>
             </div>
 
@@ -682,21 +586,21 @@
         panel.innerHTML = `
           <div class="quote-settings">
             <div class="field-group">
-              <label>Quote Group</label>
+              <label>QUOTE_GROUP_ID</label>
               <input name="quote_group" value="${quoteId}" />
             </div>
             <div class="field-group" style="margin-bottom: 15px;">
-              <label>Reference Link</label>
+              <label>REFERENCE_URL</label>
               <input name="item_link" placeholder="https://..." style="width: 100%; margin-bottom: 10px;" />
             </div>
             <div class="field-group">
-              <label>Shared Quote Attachments</label>
+              <label>ATTACH_FILES [SELECT MULTIPLE]</label>
               <input type="file" name="quote_attachments" multiple accept=".eml,.jpg,.jpeg,.gif,.png,.pdf,.docx,.pptx,.xlsx,.msg" />
               <div class="quote-files" aria-live="polite">No files selected</div>
             </div>
           </div>
           <div class="item-list"></div>
-          <button class="secondary quote-add-item" type="button" data-add-quote-item>+ Add Item</button>
+          <button class="secondary quote-add-item" type="button" data-add-quote-item>[+] ADD_ITEM</button>
         `;
         quotePanelsEl.appendChild(panel);
         panel.querySelector('[data-add-quote-item]').addEventListener('click', () => addBlankRow(panel));
@@ -944,5 +848,5 @@
       fetchPrs();
       window.setInterval(fetchPrs, 60000);
     </script>
-  </body>
+</body>
 </html>
