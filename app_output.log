@@ -1,0 +1,45 @@
+ * Serving Flask app 'purchase_request_app'
+ * Debug mode: on
+2026-10-13 13:32:14,137 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.2:5000
+2026-10-13 13:32:14,137 [INFO] [33mPress CTRL+C to quit[0m
+2026-10-13 13:32:14,138 [INFO]  * Restarting with stat
+2026-10-13 13:32:15,088 [WARNING]  * Debugger is active!
+2026-10-13 13:32:15,089 [INFO]  * Debugger PIN: 497-881-768
+2026-10-13 13:34:14,121 [INFO] 127.0.0.1 - - [13/Oct/2026 13:34:14] "GET / HTTP/1.1" 200 -
+2026-10-13 13:36:57,538 [INFO] 127.0.0.1 - - [13/Oct/2026 13:36:57] "GET / HTTP/1.1" 200 -
+2026-10-13 13:36:57,698 [INFO] 127.0.0.1 - - [13/Oct/2026 13:36:57] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:36:57,727 [INFO] 127.0.0.1 - - [13/Oct/2026 13:36:57] "GET /api/masters HTTP/1.1" 200 -
+2026-10-13 13:36:57,739 [INFO] 127.0.0.1 - - [13/Oct/2026 13:36:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-10-13 13:37:02,507 [INFO] 127.0.0.1 - - [13/Oct/2026 13:37:02] "GET / HTTP/1.1" 200 -
+2026-10-13 13:37:02,663 [INFO] 127.0.0.1 - - [13/Oct/2026 13:37:02] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:37:02,667 [INFO] 127.0.0.1 - - [13/Oct/2026 13:37:02] "GET /api/masters HTTP/1.1" 200 -
+2026-10-13 13:37:20,036 [INFO] 127.0.0.1 - - [13/Oct/2026 13:37:20] "GET / HTTP/1.1" 200 -
+2026-10-13 13:37:21,170 [INFO] 127.0.0.1 - - [13/Oct/2026 13:37:21] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:37:21,174 [INFO] 127.0.0.1 - - [13/Oct/2026 13:37:21] "GET /api/masters HTTP/1.1" 200 -
+2026-10-13 13:38:21,387 [INFO] 127.0.0.1 - - [13/Oct/2026 13:38:21] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:39:21,380 [INFO] 127.0.0.1 - - [13/Oct/2026 13:39:21] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:40:24,401 [INFO] 127.0.0.1 - - [13/Oct/2026 13:40:24] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:41:24,783 [INFO] 127.0.0.1 - - [13/Oct/2026 13:41:24] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:42:24,352 [INFO] 127.0.0.1 - - [13/Oct/2026 13:42:24] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:43:24,346 [INFO] 127.0.0.1 - - [13/Oct/2026 13:43:24] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:44:24,342 [INFO] 127.0.0.1 - - [13/Oct/2026 13:44:24] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:45:25,329 [INFO] 127.0.0.1 - - [13/Oct/2026 13:45:25] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:46:26,322 [INFO] 127.0.0.1 - - [13/Oct/2026 13:46:26] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:47:27,326 [INFO] 127.0.0.1 - - [13/Oct/2026 13:47:27] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:48:21,306 [INFO] 127.0.0.1 - - [13/Oct/2026 13:48:21] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:49:22,305 [INFO] 127.0.0.1 - - [13/Oct/2026 13:49:22] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:50:23,296 [INFO] 127.0.0.1 - - [13/Oct/2026 13:50:23] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:51:24,295 [INFO] 127.0.0.1 - - [13/Oct/2026 13:51:24] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:52:25,289 [INFO] 127.0.0.1 - - [13/Oct/2026 13:52:25] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:53:26,282 [INFO] 127.0.0.1 - - [13/Oct/2026 13:53:26] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:54:27,269 [INFO] 127.0.0.1 - - [13/Oct/2026 13:54:27] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:55:28,271 [INFO] 127.0.0.1 - - [13/Oct/2026 13:55:28] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:56:29,265 [INFO] 127.0.0.1 - - [13/Oct/2026 13:56:29] "GET /api/requests HTTP/1.1" 200 -
+2026-10-13 13:56:49,813 [INFO]  * Detected change in '/app/src/purchase_request_app.py', reloading
+2026-10-13 13:56:49,892 [INFO]  * Restarting with stat
+2026-10-13 13:56:50,340 [WARNING]  * Debugger is active!
+2026-10-13 13:56:50,341 [INFO]  * Debugger PIN: 497-881-768
+2026-10-13 13:57:21,624 [INFO] 127.0.0.1 - - [13/Oct/2026 13:57:21] "GET /api/requests HTTP/1.1" 200 -
